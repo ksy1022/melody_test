@@ -17,6 +17,8 @@ from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 from src.core.mureka_utils import find_audio_urls
 from src.core.workflow import (
@@ -31,6 +33,24 @@ from src.pdf_processor import extract_text_from_pdf, is_pdf_file
 load_dotenv()
 
 app = FastAPI(title="학습용 멜로디 생성 API")
+
+# 프론트엔드(web 폴더) 경로
+FRONTEND_DIR = project_root / "web"
+
+# 정적 파일 서빙: /static/main.js 처럼 접근
+app.mount(
+    "/static",
+    StaticFiles(directory=str(FRONTEND_DIR)),
+    name="static",
+)
+
+# 루트(/)에서 index.html 반환
+@app.get("/", include_in_schema=False)
+async def serve_front():
+    index_path = FRONTEND_DIR / "index.html"
+    if not index_path.exists():
+        raise HTTPException(status_code=404, detail="index.html 파일을 찾을 수 없습니다.")
+    return FileResponse(index_path)
 
 # CORS 설정: 웹 프론트엔드에서 접근 가능하도록
 app.add_middleware(
@@ -305,7 +325,7 @@ async def generate_song(req: GenerateSongRequest) -> GenerateSongResponse:
         raise HTTPException(status_code=500, detail=f"노래 생성 실패: {str(e)}")
 
 
-@app.get("/")
+@app.get("/api-info")
 async def root() -> Dict[str, Any]:
     """루트 엔드포인트: API 정보 제공"""
     return {
