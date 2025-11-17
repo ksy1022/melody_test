@@ -9,7 +9,6 @@ const fileInput = document.getElementById("file-input");
 const fileListEl = document.getElementById("file-list");
 const textInput = document.getElementById("text-input");
 const charCountEl = document.getElementById("char-count");
-const waitCheckbox = document.getElementById("wait-audio");
 const studyTextEl = document.getElementById("study-text");
 const planTextEl = document.getElementById("plan-text");
 const audioContainer = document.getElementById("audio-output");
@@ -290,8 +289,7 @@ async function handleGenerate() {
     setStatus("Suno 노래 생성 중...");
     const songResp = await postJSON("/generate-song", {
       study_text: studyText,
-      mnemonic_plan: mnemonicPlan,
-      wait_for_audio: Boolean(waitCheckbox.checked),
+      mnemonic_plan: mnemonicPlan
     });
     renderAudio(songResp.audio_urls || []);
 
