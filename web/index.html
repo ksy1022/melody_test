@@ -194,9 +194,15 @@
       }
     </style>
     <script>
-      window.BACKEND_BASE = window.BACKEND_BASE || "http://localhost:8000";
-    </script>
-    <script type="module" src="./main.js"></script>
+  // 만약 로컬 file:/// 이거나 http://localhost 로 열면 로컬 서버 사용
+  const isLocal = location.hostname === "localhost" || location.protocol === "file:";
+
+  window.BACKEND_BASE = isLocal 
+    ? "http://localhost:8000" 
+    : "https://melodytest-production.up.railway.app";
+</script>
+
+<script type="module" src="./main.js"></script>
   </head>
   <body>
     <main>
