@@ -125,6 +125,10 @@ python3 src/run_pipeline.py <이미지_경로>
 python3 src/run_pipeline.py /path/to/image.png
 ```
 
+### 웹사이트로 실행
+아래 URL에 접속하여 웹 서비스를 이용할 수 있습니다.
+https://melodytest-production.up.railway.app/
+
 ## 프로젝트 구조
 
 ```
